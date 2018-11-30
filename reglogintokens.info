@@ -1,0 +1,5 @@
+name = reglogintokens
+description = reglogintokens registers a token to generate a login or resiter form
+core = 7.x
+package = Tokens
+dependencies[] = token:token

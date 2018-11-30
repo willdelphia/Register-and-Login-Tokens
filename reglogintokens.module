@@ -1,0 +1,70 @@
+<?php
+
+function reglogintokens_token_info() {
+
+  $info['types'] = array(
+    'reglogin' => array(
+      'name' => t('reglogin'),
+      'description' => t('Like a shortcode but not.'),
+    )
+  );
+
+  $info['tokens'] = array(
+    'reglogin' => array(
+      'loginform' => array(
+        'name' => t('Login Form'),
+        'description' => t('Login Form Token'),
+      ),
+      'regform' => array(
+        'name' => t('Register Form'),
+        'description' => t('Register Form Token'),
+      ),
+    )
+  );
+
+
+  return $info;
+}
+
+
+function  reglogintokens_tokens($type, $tokens, array $data = array(), array $options = array()) {
+    $replacements = array();
+  
+    if ($type == 'reglogin') {
+      foreach ($tokens as $name => $original) {
+        switch ($name) {
+            case 'loginform':
+                global $user;
+
+                if ( !$user->uid ) {
+                    $elements = drupal_get_form("user_login"); 
+                    $form = drupal_render($elements);
+                    $markup = '<div>' .  $form  . '</div>';
+                }
+                else {
+                    $markup = "";
+                }
+
+                $replacements[$original] = $markup;
+            break;
+            case 'regform':
+                global $user;
+
+                if ( !$user->uid ) {
+                    $elements = drupal_get_form("user_register_form"); 
+                    $form = drupal_render($elements);
+                    $markup = '<div>' .  $form  . '</div>';
+                }
+                else {
+                    $markup = "";
+                }
+
+                $replacements[$original] = $markup;
+            break;
+            }
+      }
+    }
+
+    // An array of replacement values keyed by original token string.
+    return $replacements;
+  }
